@@ -11,6 +11,7 @@ if (isset($_POST['sync'])) {
 	      $target_fields = explode("|", $target);
 	      $target_db=$target_fields[0];
 	      $target_id=$target_fields[1];
+	      $target_id=str_replace("_com", ".com", $target_id);
 
               // Delete All Previous Trackings
 	      $stmt = $conn->prepare("DELETE FROM ".$target_db.".monsters WHERE id = ?");
@@ -87,14 +88,6 @@ if (isset($_POST['sync'])) {
                       FROM raid
                       WHERE id = ?
                       ");
-
-
-	      echo "INSERT INTO ".$target_db.".raid
-                      (id, ping, clean, pokemon_id, exclusive, template, distance, team, level, form, profile_no)
-                      SELECT REPLACE(id, ".$_SESSION['id'].", ".$target_id." ),
-                      ping, clean, pokemon_id, exclusive, template, distance, team, level, form, profile_no
-                      FROM raid
-                      WHERE id = ".$_SESSION['id'];
 
               $rs = $stmt->bind_param("sss", $_SESSION['id'], $target_id, $_SESSION['id']);
               $rs = $stmt->execute();
